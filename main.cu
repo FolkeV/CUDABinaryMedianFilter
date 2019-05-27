@@ -29,6 +29,7 @@
 
 #include "medianFilter.cuh"
 #include "utils.hpp"
+#include "timer.h"
 
 int main(int argc,char **argv){
 	std::string fileName;
@@ -81,9 +82,13 @@ int main(int argc,char **argv){
 	// Copy image to GPU
 	cudaMemcpy2D(d_binaryImg, charPitch, image.data , numCols*sizeof(char), numCols * sizeof(char), numRows, cudaMemcpyHostToDevice);
 
-	// Run kernel
+	// Run and time kernel
+	GpuTimer timer;
+	timer.Start();
 	medianFilter(d_filteredImg, d_binaryImg, d_temp, d_temp2, numCols, numRows,charPitch, intPitch);
-	cudaDeviceSynchronize();
+	timer.Stop();
+	std::cout << "GPU code ran in: " << timer.Elapsed() << "ms" << std::endl;
+	//	cudaDeviceSynchronize();	// Timer has syncronization built in
 
 	// No need to copy image back from GPU as it is handled by managed memory
 
