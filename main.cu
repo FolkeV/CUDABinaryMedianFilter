@@ -76,7 +76,7 @@ int main(int argc,char **argv){
 	cudaMallocManaged(&d_filteredImg, numPixels * sizeof(char));
 
 	// Pre process image
-	int imgMean = util::mean(image.data, numPixels);
+	unsigned int imgMean = util::mean(image.data, numPixels);
 	util::threshold(image.data, image.data, imgMean, numPixels);
 
 	// Copy image to GPU
